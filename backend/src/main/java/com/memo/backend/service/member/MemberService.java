@@ -5,6 +5,7 @@ import com.memo.backend.domain.member.MemberRepository;
 import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.dto.member.MemberSaveDTO;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,9 @@ import java.util.Optional;
 **/
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
+     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
@@ -43,5 +44,18 @@ public class MemberService {
                 finds.get(),
                 MemberRespDTO.class
         );
+    }
+
+
+    @Transactional(readOnly = true)
+    public MemberRespDTO findByEmail(String email) throws IllegalArgumentException{
+        Optional<Member> finds = memberRepository.findByEmail(email);
+
+        if(finds.isEmpty()) throw new IllegalArgumentException("이메일 [ " + email +" ] 에 해당하는 멤버가 없습니다.");
+
+        return modelMapper.map(
+                finds.get(),
+                MemberRespDTO.class
+            );
     }
 }

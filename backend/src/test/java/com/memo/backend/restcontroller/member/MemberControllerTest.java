@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClientException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +32,19 @@ class MemberControllerTest {
         uri += "/1";
         MemberRespDTO getObj = restTemplate.getForObject(uri, MemberRespDTO.class);
         assertEquals(getObj.getEmail(),"hello@gmail.com");
+    }
+
+    @Test
+    @DisplayName("멤버 조회 및 등록을 컨트롤러를 통해 에러내기")
+    public void test2(){
+        String uri = "/member/v1";
+        MemberSaveDTO req = new MemberSaveDTO();
+        req.setEmail(" ");
+        req.setPassword(" ");
+        assertThrows(RestClientException.class,()->{
+            restTemplate.postForObject(uri, req, Long.class);
+        });
+
     }
 
 }

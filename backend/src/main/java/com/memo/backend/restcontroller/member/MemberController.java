@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -15,7 +17,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/v1")
-    public Long saveMember(@RequestBody MemberSaveDTO saveDTO){
+    public Long saveMember(@RequestBody @Valid MemberSaveDTO saveDTO){
         return memberService.saveMember(saveDTO);
     }
 

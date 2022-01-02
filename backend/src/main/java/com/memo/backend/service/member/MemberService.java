@@ -28,6 +28,7 @@ public class MemberService {
     @Transactional
     public Long saveMember(MemberSaveDTO saveDTO){
         Member member = modelMapper.map(saveDTO, Member.class);
+        log.debug("### MemberService -> saveMember : " + member);
         memberRepository.save(member);
         return member.getId();
     }

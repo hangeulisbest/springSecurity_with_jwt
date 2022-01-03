@@ -1,5 +1,6 @@
 server:
   port: 8020
+
 logging:
   level:
     com:

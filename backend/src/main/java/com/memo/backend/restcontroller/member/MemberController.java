@@ -3,13 +3,17 @@ package com.memo.backend.restcontroller.member;
 import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.dto.member.MemberSaveDTO;
 import com.memo.backend.service.member.MemberService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+/**
+ * MemberController 설명 :
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/01/03
+**/
 @Slf4j
 @RestController
 @RequiredArgsConstructor

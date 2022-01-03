@@ -39,4 +39,22 @@ class LoginServiceTest {
         MemberRespDTO successLogin = loginService.login("wj100213@gmail.com","1234");
         assertEquals(successLogin.getId(),1L);
     }
+
+
+    @Test
+    @DisplayName("로그인이 실패하는 경우")
+    @Transactional
+    public void test2(){
+        MemberSaveDTO dto = new MemberSaveDTO();
+        dto.setEmail("wj100213@gmail.com");
+        dto.setPassword("1234");
+        memberService.saveMember(dto);
+        em.flush();
+        em.clear();
+
+
+        MemberRespDTO find = loginService.login("wj100213@gmail.com", "1234444");
+        assertNull(find.getId());
+
+    }
 }

@@ -46,16 +46,4 @@ public class MemberService {
         );
     }
 
-
-    @Transactional(readOnly = true)
-    public MemberRespDTO findByEmail(String email) throws IllegalArgumentException{
-        Optional<Member> finds = memberRepository.findByEmail(email);
-
-        if(finds.isEmpty()) throw new IllegalArgumentException("이메일 [ " + email +" ] 에 해당하는 멤버가 없습니다.");
-
-        return modelMapper.map(
-                finds.get(),
-                MemberRespDTO.class
-            );
-    }
 }

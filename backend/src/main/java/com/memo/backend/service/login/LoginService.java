@@ -26,13 +26,14 @@ public class LoginService {
 
     @Transactional
     public MemberRespDTO login(String email,String password){
-        Member member = memberRepository
-                .findByEmail(email)
-                .filter(m -> m.getPassword().equals(password))
-                .orElseThrow();
 
+        Optional<Member> member = memberRepository
+                .findByEmail(email)
+                .filter(m -> m.getPassword().equals(password));
+
+        if(member.isEmpty()) return new MemberRespDTO();
         return modelMapper.map(
-                member,
+                member.get(),
                 MemberRespDTO.class
         );
     }

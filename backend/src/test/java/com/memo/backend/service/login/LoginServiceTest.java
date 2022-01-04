@@ -1,6 +1,6 @@
 package com.memo.backend.service.login;
 
-import com.memo.backend.dto.member.MemberRespDTO;
+import com.memo.backend.domain.member.Member;
 import com.memo.backend.dto.member.MemberSaveDTO;
 import com.memo.backend.service.member.MemberService;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,8 +38,8 @@ class LoginServiceTest {
         em.clear();
 
 
-        MemberRespDTO successLogin = loginService.login("wj100213@gmail.com","1234");
-        assertEquals(successLogin.getId(),1L);
+        Optional<Member> login = loginService.login("wj100213@gmail.com", "1234");
+        assertEquals(login.get().getId(),1L);
     }
 
 
@@ -53,8 +55,8 @@ class LoginServiceTest {
         em.clear();
 
 
-        MemberRespDTO find = loginService.login("wj100213@gmail.com", "1234444");
-        assertNull(find.getId());
+        Optional<Member> login = loginService.login("wj100213@gmail.com", "1234444");
+        assertTrue(login.isEmpty());
 
     }
 }

@@ -55,20 +55,4 @@ class MemberServiceTest {
         });
     }
 
-    @DisplayName("이메일로 찾아오기")
-    @Test
-    @Transactional
-    public void test3(){
-        MemberSaveDTO dto = new MemberSaveDTO();
-        dto.setPassword("1234");
-        dto.setEmail("wj100213@gmail.com");
-        memberService.saveMember(dto);
-        entityManager.flush();
-        entityManager.clear();
-
-        MemberRespDTO ret = memberService.findByEmail("wj100213@gmail.com");
-        assertEquals(ret.getId(),1L);
-        assertEquals(ret.getEmail(),"wj100213@gmail.com");
-    }
-
 }

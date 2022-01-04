@@ -22,19 +22,12 @@ import java.util.Optional;
 @Transactional
 public class LoginService {
     private final MemberRepository memberRepository;
-    private final ModelMapper modelMapper;
 
     @Transactional
-    public MemberRespDTO login(String email,String password){
+    public Optional<Member> login(String email,String password){
 
-        Optional<Member> member = memberRepository
+        return memberRepository
                 .findByEmail(email)
                 .filter(m -> m.getPassword().equals(password));
-
-        if(member.isEmpty()) return new MemberRespDTO();
-        return modelMapper.map(
-                member.get(),
-                MemberRespDTO.class
-        );
     }
 }

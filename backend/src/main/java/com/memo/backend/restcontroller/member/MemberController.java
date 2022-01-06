@@ -35,8 +35,8 @@ public class MemberController {
 
     @GetMapping("/v1")
     public MemberRespDTO findBySession(
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER,required = false) Member member){
-        if(member != null) return memberService.findById(member.getId());
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER,required = false) Long id){
+        if(id != null) return memberService.findById(id);
         else return null;
     }
 }

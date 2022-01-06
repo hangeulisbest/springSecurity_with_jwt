@@ -44,8 +44,9 @@ public class LoginController {
             throw new NoSuchElementException("유저 정보가 없거나 비밀번호가 틀립니다.");
         }
         // session 생성 및 가져오기
+        // session 은 메모리를 사용한다
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER,find.get());
+        session.setAttribute(SessionConst.LOGIN_MEMBER,find.get().getId());
 
         return String.valueOf(find.get().getId());
     }

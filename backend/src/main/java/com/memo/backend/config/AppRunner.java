@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * AppRunner 설명 : 현재 프로필이 뭔지 단순 출력 기능
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/01/07
+**/
 @Slf4j
 @Component
 @RequiredArgsConstructor

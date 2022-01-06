@@ -1,5 +1,7 @@
 package com.memo.backend.restcontroller.member;
 
+import com.memo.backend.commoncode.SessionConst;
+import com.memo.backend.domain.member.Member;
 import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.dto.member.MemberSaveDTO;
 import com.memo.backend.service.member.MemberService;
@@ -31,4 +33,10 @@ public class MemberController {
         return memberService.findById(id);
     }
 
+    @GetMapping("/v1")
+    public MemberRespDTO findBySession(
+            @SessionAttribute(value = SessionConst.LOGIN_MEMBER,required = false) Member member){
+        if(member != null) return memberService.findById(member.getId());
+        else return null;
+    }
 }

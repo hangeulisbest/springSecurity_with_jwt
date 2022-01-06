@@ -1,5 +1,8 @@
 server:
   port: 8020
+  servlet:
+    session:
+      tracking-modes: cookie
 
 logging:
   level:

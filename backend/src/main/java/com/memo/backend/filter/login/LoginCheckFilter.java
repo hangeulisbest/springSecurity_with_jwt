@@ -29,13 +29,19 @@ public class LoginCheckFilter implements Filter {
         try{
             log.info("login 인증 체크 필터 start = {}",requestURI);
 
-            if(isLoginCheckPath(requestURI)){
+            if(whiteListCheckFail(requestURI)){
                 // false 로 해야 세션생성을 안함
                 HttpSession session = servletRequest.getSession(false);
                 if(session == null  // 세션이 없거나
                 || session.getAttribute(SessionConst.LOGIN_MEMBER)==null // 세션이 만료된 경우
                 ){
                     log.info("미인증 사용자 요청 발생 = {}",requestURI);
+
+                    /*
+                    * sendRedirect를 통해서 login 페이지로 이동후 redirectURL을 이용해 원래 접근하려던 페이지로 이동할 수 있어야한다.
+                    * servletResponse.sendRedirect("/login?redirectURL="+requestURI);
+                    * */
+
                     servletResponse.sendError(401);
                     return;
                 }
@@ -52,7 +58,7 @@ public class LoginCheckFilter implements Filter {
     /**
      * 화이트리스트인 경우 세션체크없이 승낙
      */
-    private boolean isLoginCheckPath(String requestURI){
+    private boolean whiteListCheckFail(String requestURI){
         return !PatternMatchUtils.simpleMatch(whiteList,requestURI);
     }
 }

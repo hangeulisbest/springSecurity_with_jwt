@@ -2,10 +2,13 @@ package com.memo.backend.config;
 
 import com.memo.backend.filter.login.LoginCheckFilter;
 import com.memo.backend.filter.login.LoginLogFilter;
+import com.memo.backend.interceptor.LogInterceptor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.Filter;
 
@@ -16,7 +19,15 @@ import javax.servlet.Filter;
  * 작성일 : 2022/01/07
 **/
 @Configuration
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LogInterceptor())
+                .order(1)
+                .addPathPatterns("/**");
+                //.excludePathPatterns("/css/*")
+    }
 
     // DTO , VO 간 매퍼 관리
     @Bean

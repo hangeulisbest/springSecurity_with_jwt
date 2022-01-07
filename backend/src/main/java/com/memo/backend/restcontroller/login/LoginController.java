@@ -35,7 +35,9 @@ public class LoginController {
      * 작성일 : 2022/01/06
     **/
     @PostMapping("/login/v1")
-    public String login(@Valid @RequestBody LoginReqDTO loginReqDTO, HttpServletRequest request) throws Exception{
+    public String login(@Valid @RequestBody LoginReqDTO loginReqDTO,
+                        @RequestParam(defaultValue = "/") String redirectURL,
+                        HttpServletRequest request) throws Exception{
         Optional<Member> find = loginService.login(loginReqDTO.getEmail(), loginReqDTO.getPassword());
         if(find.isEmpty()){
             throw new NoSuchElementException("유저 정보가 없거나 비밀번호가 틀립니다.");
@@ -45,7 +47,7 @@ public class LoginController {
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER,find.get().getId());
 
-        return String.valueOf(find.get().getId());
+        return "login success next path is = " + redirectURL;
     }
 
     @GetMapping("/logout/v1")

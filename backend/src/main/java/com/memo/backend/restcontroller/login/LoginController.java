@@ -6,10 +6,7 @@ import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.service.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/login")
+@RequestMapping("/api")
 public class LoginController {
     private final LoginService loginService;
 
@@ -37,7 +34,7 @@ public class LoginController {
      * @version 1.0.0
      * 작성일 : 2022/01/06
     **/
-    @PostMapping("/v1")
+    @PostMapping("/login/v1")
     public String login(@Valid @RequestBody LoginReqDTO loginReqDTO, HttpServletRequest request) throws Exception{
         Optional<Member> find = loginService.login(loginReqDTO.getEmail(), loginReqDTO.getPassword());
         if(find.isEmpty()){
@@ -49,6 +46,16 @@ public class LoginController {
         session.setAttribute(SessionConst.LOGIN_MEMBER,find.get().getId());
 
         return String.valueOf(find.get().getId());
+    }
+
+    @GetMapping("/logout/v1")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+            return "로그아웃 성공";
+        }
+        return "세션정보가 없습니다.";
     }
 
 

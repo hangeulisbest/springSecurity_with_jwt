@@ -3,6 +3,7 @@ package com.memo.backend.config;
 import com.memo.backend.filter.login.LoginCheckFilter;
 import com.memo.backend.filter.login.LoginLogFilter;
 import com.memo.backend.interceptor.LogInterceptor;
+import com.memo.backend.interceptor.LoginCheckInterceptor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +22,26 @@ import javax.servlet.Filter;
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
 
+    // 인터셉터 설정
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 로그 남기는 인터셉터
         registry.addInterceptor(new LogInterceptor())
                 .order(1)
                 .addPathPatterns("/**");
                 //.excludePathPatterns("/css/*")
+
+        // 로그인 체크하는 인터셉터
+        registry.addInterceptor(new LoginCheckInterceptor())
+                .order(2)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/api/member/v1",
+                        "/api/login/**",
+                        "/api/logout/**",
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs",
+                        "/error");
     }
 
     // DTO , VO 간 매퍼 관리
@@ -38,9 +53,9 @@ public class AppConfig implements WebMvcConfigurer {
         return modelMapper;
     }
 
-    // Filter 관리
 
-    @Bean
+    // Filter 관리
+/*    @Bean
     public FilterRegistrationBean<Filter> logFilter(){
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new LoginLogFilter());
@@ -56,7 +71,6 @@ public class AppConfig implements WebMvcConfigurer {
         filterFilterRegistrationBean.addUrlPatterns("/*");
         filterFilterRegistrationBean.setOrder(2);
         return filterFilterRegistrationBean;
-    }
-
+    }*/
 
 }

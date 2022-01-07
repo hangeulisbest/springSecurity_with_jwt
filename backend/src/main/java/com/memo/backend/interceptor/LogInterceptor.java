@@ -27,10 +27,9 @@ public class LogInterceptor implements HandlerInterceptor {
         // 정적리소스 : ResourceHttpRequestHandler
         if(handler instanceof HandlerMethod){
             HandlerMethod hm = (HandlerMethod) handler;
-            log.debug("호출할 메서드 이름 = {}",hm.getMethod().getName());
+            log.info("LogInterceptor PREHANDLE ID : [{}] URI : [{}][{}] HANDLER : [{}]",uuid,request.getMethod(),requestURI,hm);
+            //log.debug("호출할 메서드 이름 = {}",hm.getMethod().getName());
         }
-
-        log.info("INTERCEPTOR PREHANDLE [{}][{}]",uuid,requestURI);
         return true;
     }
 
@@ -43,7 +42,7 @@ public class LogInterceptor implements HandlerInterceptor {
     **/
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("INTERCEPTOR POSTHANDLE modelAndView = {}",modelAndView);
+        log.info("LogInterceptor POSTHANDLE modelAndView = {}",modelAndView);
     }
 
     // 컨트롤러에서 에러가 발생해도 실행된다.
@@ -52,10 +51,14 @@ public class LogInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         String logId = (String) request.getAttribute(LOG_ID);
 
-        log.info("INTERCEPTOR AFTERCOMPLETION [{}][{}][{}]",logId,requestURI,handler);
+        if(handler instanceof HandlerMethod){
+            HandlerMethod hm = (HandlerMethod) handler;
+            log.info("LogInterceptor AFTERCOMPLETION ID : [{}] URI : [{}][{}] HANDLER : [{}]",logId,request.getMethod(),requestURI,hm);
+            //log.debug("호출할 메서드 이름 = {}",hm.getMethod().getName());
+        }
 
         if(ex != null){
-            log.error("INTERCEPTOR AFTERCOMPLETION ERROR = {}",ex.toString());
+            log.error("LogInterceptor AFTERCOMPLETION ERROR = {}",ex.toString());
         }
     }
 }

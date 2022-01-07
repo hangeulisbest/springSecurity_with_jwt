@@ -1,15 +1,18 @@
 package com.memo.backend.filter.login;
 
-import com.memo.backend.commoncode.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.PatternMatchUtils;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * LoginCheckFilter 설명 :
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/01/08
+ * NOT USED
+**/
 @Slf4j
 public class LoginCheckFilter implements Filter {
 
@@ -22,6 +25,7 @@ public class LoginCheckFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        /*
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         String requestURI = servletRequest.getRequestURI();
         HttpServletResponse servletResponse = (HttpServletResponse) response;
@@ -36,13 +40,6 @@ public class LoginCheckFilter implements Filter {
                 || session.getAttribute(SessionConst.LOGIN_MEMBER)==null // 세션이 만료된 경우
                 ){
                     log.info("미인증 사용자 요청 발생 = {}",requestURI);
-
-                    /*
-                    * sendRedirect를 통해서 login 페이지로 이동후 redirectURL을 이용해 원래 접근하려던 페이지로 이동할 수 있어야한다.
-                    * servletResponse.sendRedirect("/login?redirectURL="+requestURI);
-                    * */
-
-                    servletResponse.sendError(401);
                     return;
                 }
             }
@@ -53,6 +50,7 @@ public class LoginCheckFilter implements Filter {
         }finally {
             log.info("인증필터 종료 {}",requestURI);
         }
+        */
     }
 
     /**

@@ -11,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * MemberService 설명 : 멤버 등록 및 조회
@@ -29,8 +31,8 @@ public class MemberService {
     @Transactional
     public Long saveMember(MemberSaveDTO saveDTO){
         Member member = modelMapper.map(saveDTO, Member.class);
-        log.debug("### MemberService -> saveMember : " + member);
         memberRepository.save(member);
+        log.debug("### MemberService -> saveMember : " + member);
         return member.getId();
     }
 
@@ -44,6 +46,11 @@ public class MemberService {
                 finds.get(),
                 MemberRespDTO.class
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberRespDTO> findAll(){
+        return memberRepository.findAll().stream().map(o->modelMapper.map(o,MemberRespDTO.class)).collect(Collectors.toList());
     }
 
 }

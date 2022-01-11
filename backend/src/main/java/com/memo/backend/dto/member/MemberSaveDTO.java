@@ -12,6 +12,9 @@ import javax.validation.constraints.NotBlank;
 public class MemberSaveDTO {
 
     @NotBlank
+    private String username;
+
+    @NotBlank
     private String email;
 
     @NotBlank

@@ -43,7 +43,8 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/member/v1",
+                .excludePathPatterns("/api/member/v1/**",
+                        "/api/members/v1",
                         "/api/login/**",
                         "/api/logout/**",
                         "/swagger-ui/**",

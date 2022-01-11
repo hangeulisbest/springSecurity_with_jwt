@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+
 /**
  * MemberController 설명 :
  * @author jowonjun
@@ -23,6 +25,8 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class MemberController {
     private final MemberService memberService;
+
+
 
     @PostMapping("/member/v1")
     public Long saveMember(@RequestBody @Valid MemberSaveDTO saveDTO){
@@ -46,5 +50,10 @@ public class MemberController {
     public String sessionTest(@Login Long memberId){
         if(memberId == null) return "세션이 없습니다.";
         return memberService.findById(memberId).getEmail() + " 님 반갑습니다.";
+    }
+
+    @GetMapping("/members/v1")
+    public List<MemberRespDTO> findAll(){
+        return memberService.findAll();
     }
 }

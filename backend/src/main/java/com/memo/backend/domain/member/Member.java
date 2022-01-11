@@ -17,6 +17,8 @@ public class Member {
     @Id @GeneratedValue
     private Long id;
 
+    private String username;
+
     @Column(name = "email",unique = true,nullable = false)
     private String email;
 
@@ -24,7 +26,8 @@ public class Member {
     private String password;
 
     @Builder
-    public Member(String email, String password) {
+    public Member(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }

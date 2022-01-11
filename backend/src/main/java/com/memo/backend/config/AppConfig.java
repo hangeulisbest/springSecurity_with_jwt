@@ -1,5 +1,6 @@
 package com.memo.backend.config;
 
+import com.memo.backend.argumentresolver.LoginMemberArgumentResolver;
 import com.memo.backend.filter.login.LoginCheckFilter;
 import com.memo.backend.filter.login.LoginLogFilter;
 import com.memo.backend.interceptor.LogInterceptor;
@@ -8,10 +9,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.Filter;
+import java.util.List;
 
 /**
  * AppConfig 설명 : App Config 를 위한 빈정보 관리
@@ -21,6 +24,11 @@ import javax.servlet.Filter;
 **/
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new LoginMemberArgumentResolver());
+    }
 
     // 인터셉터 설정
     @Override

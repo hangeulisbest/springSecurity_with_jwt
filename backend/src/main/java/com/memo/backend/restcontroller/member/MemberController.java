@@ -1,5 +1,6 @@
 package com.memo.backend.restcontroller.member;
 
+import com.memo.backend.argumentresolver.Login;
 import com.memo.backend.commoncode.SessionConst;
 import com.memo.backend.domain.member.Member;
 import com.memo.backend.dto.member.MemberRespDTO;
@@ -39,5 +40,11 @@ public class MemberController {
         log.debug("find-session => id={}",id);
         if(id != null) return memberService.findById(id);
         else return null;
+    }
+
+    @GetMapping("/member/sessiontest")
+    public String sessionTest(@Login Long memberId){
+        if(memberId == null) return "세션이 없습니다.";
+        return memberService.findById(memberId).getEmail() + " 님 반갑습니다.";
     }
 }

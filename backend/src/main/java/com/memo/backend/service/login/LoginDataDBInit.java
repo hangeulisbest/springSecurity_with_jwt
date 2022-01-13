@@ -33,8 +33,8 @@ public class LoginDataDBInit {
         private final MemberService memberService;
 
         public void init(){
-            MemberSaveDTO m1 = new MemberSaveDTO("wj100213@gmail.com","1234","wonjun");
-            MemberSaveDTO m2 = new MemberSaveDTO("lokshopi@naver.com","helloworld!","hello");
+            MemberSaveDTO m1 = new MemberSaveDTO("wonjun","wj100213@gmail.com","1234");
+            MemberSaveDTO m2 = new MemberSaveDTO("hello","lokshopi@naver.com","helloworld!");
             memberService.saveMember(m1);
             memberService.saveMember(m2);
         }

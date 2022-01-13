@@ -25,11 +25,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-     private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
     public Long saveMember(MemberSaveDTO saveDTO){
+        Optional<Member> find = memberRepository.findByEmail(saveDTO.getEmail());
+        if(find.isPresent()) throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         Member member = modelMapper.map(saveDTO, Member.class);
         memberRepository.save(member);
         log.debug("### MemberService -> saveMember : " + member);

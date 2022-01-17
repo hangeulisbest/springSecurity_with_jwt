@@ -1,9 +1,13 @@
 package com.memo.backend.filter.login;
 
+import com.memo.backend.commoncode.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.PatternMatchUtils;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -25,7 +29,7 @@ public class LoginCheckFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        /*
+
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         String requestURI = servletRequest.getRequestURI();
         HttpServletResponse servletResponse = (HttpServletResponse) response;
@@ -50,7 +54,7 @@ public class LoginCheckFilter implements Filter {
         }finally {
             log.info("인증필터 종료 {}",requestURI);
         }
-        */
+
     }
 
     /**

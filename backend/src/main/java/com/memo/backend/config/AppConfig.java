@@ -64,22 +64,22 @@ public class AppConfig implements WebMvcConfigurer {
 
 
     // Filter 관리
-/*    @Bean
-    public FilterRegistrationBean<Filter> logFilter(){
-        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-        filterFilterRegistrationBean.setFilter(new LoginLogFilter());
-        filterFilterRegistrationBean.addUrlPatterns("/*");
-        filterFilterRegistrationBean.setOrder(1);
-        return filterFilterRegistrationBean;
-    }
-
-    @Bean
-    public FilterRegistrationBean<Filter> checkFilter(){
-        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-        filterFilterRegistrationBean.setFilter(new LoginCheckFilter());
-        filterFilterRegistrationBean.addUrlPatterns("/*");
-        filterFilterRegistrationBean.setOrder(2);
-        return filterFilterRegistrationBean;
-    }*/
+//    @Bean
+//    public FilterRegistrationBean<Filter> logFilter(){
+//        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
+//        filterFilterRegistrationBean.setFilter(new LoginLogFilter());
+//        filterFilterRegistrationBean.addUrlPatterns("/*");
+//        filterFilterRegistrationBean.setOrder(1);
+//        return filterFilterRegistrationBean;
+//    }
+//
+//    @Bean
+//    public FilterRegistrationBean<Filter> checkFilter(){
+//        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
+//        filterFilterRegistrationBean.setFilter(new LoginCheckFilter());
+//        filterFilterRegistrationBean.addUrlPatterns("/*");
+//        filterFilterRegistrationBean.setOrder(2);
+//        return filterFilterRegistrationBean;
+//    }
 
 }

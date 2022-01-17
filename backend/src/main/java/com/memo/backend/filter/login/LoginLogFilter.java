@@ -3,6 +3,7 @@ package com.memo.backend.filter.login;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class LoginLogFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        /*
+
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         UUID logID = UUID.randomUUID();
         String requestURI = servletRequest.getRequestURI();
@@ -31,6 +32,6 @@ public class LoginLogFilter implements Filter {
         }finally {
             log.info("RESPONSE [{}][{}]- {}",method,requestURI,logID);
         }
-        */
+
     }
 }

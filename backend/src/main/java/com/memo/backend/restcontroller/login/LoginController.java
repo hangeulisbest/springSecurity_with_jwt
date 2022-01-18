@@ -3,6 +3,8 @@ package com.memo.backend.restcontroller.login;
 import com.memo.backend.commoncode.SessionConst;
 import com.memo.backend.domain.member.Member;
 import com.memo.backend.dto.login.LoginReqDTO;
+import com.memo.backend.exceptionhandler.BizException;
+import com.memo.backend.exceptionhandler.MemberExceptionType;
 import com.memo.backend.service.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,11 +39,9 @@ public class LoginController {
     @PostMapping("/login/v1")
     public String login(@Valid @RequestBody LoginReqDTO loginReqDTO,
                         @RequestParam(defaultValue = "/") String redirectURL,
-                        HttpServletRequest request) throws Exception{
+                        HttpServletRequest request) throws BizException{
         Optional<Member> find = loginService.login(loginReqDTO.getEmail(), loginReqDTO.getPassword());
-        if(find.isEmpty()){
-            throw new NoSuchElementException("유저 정보가 없거나 비밀번호가 틀립니다.");
-        }
+        if(find.isEmpty()) throw new BizException(MemberExceptionType.WRONG_PASSWORD);
         // session 생성 및 가져오기
         // session 은 메모리를 사용한다
         HttpSession session = request.getSession();

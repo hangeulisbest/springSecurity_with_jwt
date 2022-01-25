@@ -61,6 +61,12 @@ public class Swagger3Config {
         return List.of(new SecurityReference("JWT", authorizationScopes));
     }
 
+    /**
+     * apiKey 설명 : jwt 를 활용한 인증방식 설정을 위한 Api key
+     * @author jowonjun
+     * @version 1.0.0
+     * 작성일 : 2022/01/25
+    **/
     private ApiKey apiKey() {
         return new ApiKey("JWT","Authorization","header");
     }

@@ -48,6 +48,12 @@ public class Swagger3Config {
                 .build();
     }
 
+    /**
+     * securityContext 설명 :  authorize 추가
+     * @author jowonjun
+     * @version 1.0.0
+     * 작성일 : 2022/01/27
+    **/
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())

@@ -49,7 +49,7 @@ public class Swagger3Config {
     }
 
     /**
-     * securityContext 설명 :  authorize 추후 로그인 관련된 DTO 수정 예정
+     * securityContext 설명 :  authorize
      * @author jowonjun
      * @version 1.0.0
      * 작성일 : 2022/01/27

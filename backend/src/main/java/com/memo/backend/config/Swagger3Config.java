@@ -49,7 +49,7 @@ public class Swagger3Config {
     }
 
     /**
-     * securityContext 설명 :  authorize
+     * securityContext 설명 :  스웨거 등록
      * @author jowonjun
      * @version 1.0.0
      * 작성일 : 2022/01/27

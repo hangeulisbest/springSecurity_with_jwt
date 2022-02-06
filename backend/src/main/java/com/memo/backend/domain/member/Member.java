@@ -1,17 +1,15 @@
 package com.memo.backend.domain.member;
 
+import com.memo.backend.commoncode.Authority;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity
+@ToString
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Entity
 public class Member {
 
     @Id @GeneratedValue
@@ -25,10 +23,14 @@ public class Member {
     @Column(name = "password",nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     @Builder
-    public Member(String username, String email, String password) {
+    public Member(String username, String email, String password, Authority authority) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.authority = authority;
     }
 }

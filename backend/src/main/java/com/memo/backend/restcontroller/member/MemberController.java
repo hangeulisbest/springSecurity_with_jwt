@@ -22,38 +22,47 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/member")
 public class MemberController {
     private final MemberService memberService;
 
-
-
-    @PostMapping("/member/v1")
-    public Long saveMember(@RequestBody @Valid MemberSaveDTO saveDTO){
-        return memberService.saveMember(saveDTO);
+    @GetMapping("/me")
+    public MemberRespDTO getMyInfo() {
+        return memberService.getMyInfo();
     }
 
-    @GetMapping("/member/v1/{id}")
-    public MemberRespDTO findById(@PathVariable Long id){
-        return memberService.findById(id);
+    @GetMapping("/{email}")
+    public MemberRespDTO getMemberInfo(@PathVariable String email) {
+        return memberService.getMemberInfo(email);
     }
 
-    @GetMapping("/member/v1")
-    public MemberRespDTO findBySession(
-            @SessionAttribute(value = SessionConst.LOGIN_MEMBER,required = false) Long id){
-        log.debug("find-session => id={}",id);
-        if(id != null) return memberService.findById(id);
-        else return null;
-    }
-
-    @GetMapping("/member/sessiontest")
-    public String sessionTest(@Login Long memberId){
-        if(memberId == null) return "세션이 없습니다.";
-        return memberService.findById(memberId).getEmail() + " 님 반갑습니다.";
-    }
-
-    @GetMapping("/members/v1")
-    public List<MemberRespDTO> findAll(){
-        return memberService.findAll();
-    }
+//
+//    @PostMapping("/v1")
+//    public Long saveMember(@RequestBody @Valid MemberSaveDTO saveDTO){
+//        return memberService.saveMember(saveDTO);
+//    }
+//
+//    @GetMapping("/v1/{id}")
+//    public MemberRespDTO findById(@PathVariable Long id){
+//        return memberService.findById(id);
+//    }
+//
+//    @GetMapping("/v1")
+//    public MemberRespDTO findBySession(
+//            @SessionAttribute(value = SessionConst.LOGIN_MEMBER,required = false) Long id){
+//        log.debug("find-session => id={}",id);
+//        if(id != null) return memberService.findById(id);
+//        else return null;
+//    }
+//
+//    @GetMapping("/sessiontest")
+//    public String sessionTest(@Login Long memberId){
+//        if(memberId == null) return "세션이 없습니다.";
+//        return memberService.findById(memberId).getEmail() + " 님 반갑습니다.";
+//    }
+//
+//    @GetMapping("/v1")
+//    public List<MemberRespDTO> findAll(){
+//        return memberService.findAll();
+//    }
 }

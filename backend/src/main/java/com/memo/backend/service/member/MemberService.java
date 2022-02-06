@@ -4,7 +4,9 @@ import com.memo.backend.domain.member.Member;
 import com.memo.backend.domain.member.MemberRepository;
 import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.dto.member.MemberSaveDTO;
-import lombok.AllArgsConstructor;
+import com.memo.backend.exceptionhandler.BizException;
+import com.memo.backend.exceptionhandler.MemberExceptionType;
+import com.memo.backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -27,6 +29,24 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
+
+    @Transactional(readOnly = true)
+    public MemberRespDTO getMemberInfo(String email) {
+        return memberRepository.findByEmail(email)
+                .map(MemberRespDTO::of)
+                .orElseThrow(()-> new BizException(MemberExceptionType.NOT_FOUND_USER)); // 유저를 찾을 수 없습니다.
+    }
+
+    /**
+     *
+     * @return 현재 securityContext에 있는 유저 정보를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public MemberRespDTO getMyInfo() {
+        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
+                .map(MemberRespDTO::of)
+                .orElseThrow(()->new BizException(MemberExceptionType.NOT_FOUND_USER));
+    }
 
     @Transactional
     public Long saveMember(MemberSaveDTO saveDTO){

@@ -45,7 +45,7 @@ public class LoginController {
         // session 생성 및 가져오기
         // session 은 메모리를 사용한다
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER,find.get().getId());
+        session.setAttribute(SessionConst.LOGIN_MEMBER,find.get().getMemberId());
 
         return "login success next path is = " + redirectURL;
     }

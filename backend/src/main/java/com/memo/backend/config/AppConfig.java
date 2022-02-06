@@ -40,17 +40,17 @@ public class AppConfig implements WebMvcConfigurer {
                 //.excludePathPatterns("/css/*")
 
         // 로그인 체크하는 인터셉터
-        registry.addInterceptor(new LoginCheckInterceptor())
-                .order(2)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/api/member/v1/**",
-                        "/api/members/v1",
-                        "/api/login/**",
-                        "/api/logout/**",
-                        "/swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/v3/api-docs",
-                        "/error");
+//        registry.addInterceptor(new LoginCheckInterceptor())
+//                .order(2)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/api/member/v1/**",
+//                        "/api/members/v1",
+//                        "/api/login/**",
+//                        "/api/logout/**",
+//                        "/swagger-ui/**",
+//                        "/swagger-resources/**",
+//                        "/v3/api-docs",
+//                        "/error");
     }
 
     // DTO , VO 간 매퍼 관리

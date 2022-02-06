@@ -55,7 +55,7 @@ public class MemberService {
         Member member = modelMapper.map(saveDTO, Member.class);
         memberRepository.save(member);
         log.debug("### MemberService -> saveMember : " + member);
-        return member.getId();
+        return member.getMemberId();
     }
 
     @Transactional(readOnly = true)

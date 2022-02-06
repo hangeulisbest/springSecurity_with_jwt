@@ -1,20 +1,26 @@
 package com.memo.backend.domain.member;
 
-import com.memo.backend.commoncode.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.memo.backend.domain.Authority.Authority;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
-@ToString
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "member")
 @Entity
 public class Member {
 
-    @Id @GeneratedValue
-    private Long id;
+    @JsonIgnore
+    @Column(name = "member_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long memberId;
 
+    @Column(name = "username",length = 50,nullable = false)
     private String username;
 
     @Column(name = "email",unique = true,nullable = false)
@@ -23,14 +29,16 @@ public class Member {
     @Column(name = "password",nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Authority authority;
+    @JsonIgnore
+    @Column(name = "activated")
+    private boolean activated;
 
-    @Builder
-    public Member(String username, String email, String password, Authority authority) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.authority = authority;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "member_authority",
+            joinColumns = {@JoinColumn(name="member_id",referencedColumnName = "member_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name",referencedColumnName = "authority_name")}
+    )
+    private Set<Authority> authorities;
+
 }

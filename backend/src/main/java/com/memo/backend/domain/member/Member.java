@@ -5,6 +5,7 @@ import com.memo.backend.domain.Authority.Authority;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -39,6 +40,21 @@ public class Member {
             joinColumns = {@JoinColumn(name="member_id",referencedColumnName = "member_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name",referencedColumnName = "authority_name")}
     )
-    private Set<Authority> authorities;
+    private Set<Authority> authorities = new HashSet<>();
 
+    @Builder
+    public Member(String username, String email, String password, boolean activated) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.activated = activated;
+    }
+
+    public void addAuthority(Authority authority) {
+        this.getAuthorities().add(authority);
+    }
+
+    public void removeAuthority(Authority authority) {
+        this.getAuthorities().remove(authority);
+    }
 }

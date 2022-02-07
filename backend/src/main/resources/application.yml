@@ -13,8 +13,9 @@ logging:
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용 (아래 명령어를 터미널에 쳐보면 그대로 나옴)
 # echo -n 'hello-my-real-name-is-wonjun-this-key-is-very-important-so-be-careful-thank-you' | openssl base64
 jwt:
+  header: Authorization
   secret: aGVsbG8tbXktcmVhbC1uYW1lLWlzLXdvbmp1bi10aGlzLWtleS1pcy12ZXJ5LWltcG9ydGFudC1zby1iZS1jYXJlZnVsLXRoYW5rLXlvdQ==
-
+  token-validity-in-seconds: 86400
 ---
 
 spring:

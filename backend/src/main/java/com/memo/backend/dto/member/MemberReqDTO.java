@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * MemberReqDTO 설명 :
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/02/08
+**/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

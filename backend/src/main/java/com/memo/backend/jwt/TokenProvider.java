@@ -21,6 +21,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/**
+ * TokenProvider 설명 :
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/02/09
+**/
 @Slf4j
 @Component
 public class TokenProvider {

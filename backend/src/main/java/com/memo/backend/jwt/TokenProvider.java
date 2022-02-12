@@ -2,6 +2,7 @@ package com.memo.backend.jwt;
 
 import com.memo.backend.dto.jwt.TokenDTO;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class TokenProvider {
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey ,
                          @Value("${jwt.access-token-expire-time}") long accessTime,
-                         @Value("${refresh-token-expire-time}") long refreshTime
+                         @Value("${jwt.refresh-token-expire-time}") long refreshTime
                          ) {
         this.ACCESS_TOKEN_EXPIRE_TIME = accessTime;
         this.REFRESH_TOKEN_EXPIRE_TIME = refreshTime;
@@ -49,9 +50,11 @@ public class TokenProvider {
 
     public TokenDTO generateTokenDTO(Authentication authentication) {
         // 모든 권한들 가져오기
+        // 요청 한개 단위에 따라 그 요청의 인증정보가 다 담겨있음.
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+
 
         long now = (new Date()).getTime();
 

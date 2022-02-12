@@ -19,10 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class MemberReqDTO {
     private String email;
     private String password;
+    private String username;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(email)
+                .username(username)
                 .password(passwordEncoder.encode(password))
                 .activated(false)
                 .build();

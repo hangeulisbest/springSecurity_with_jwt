@@ -34,10 +34,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 로그 남기는 인터셉터
-        registry.addInterceptor(new LogInterceptor())
+       /* registry.addInterceptor(new LogInterceptor())
                 .order(1)
                 .addPathPatterns("/**");
-                //.excludePathPatterns("/css/*")
+                //.excludePathPatterns("/css/*") */
 
         // 로그인 체크하는 인터셉터
 //        registry.addInterceptor(new LoginCheckInterceptor())
@@ -52,6 +52,7 @@ public class AppConfig implements WebMvcConfigurer {
 //                        "/v3/api-docs",
 //                        "/error");
     }
+
 
     // DTO , VO 간 매퍼 관리
     @Bean

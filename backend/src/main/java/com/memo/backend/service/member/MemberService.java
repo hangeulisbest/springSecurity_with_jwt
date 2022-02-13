@@ -48,31 +48,4 @@ public class MemberService {
                 .orElseThrow(()->new BizException(MemberExceptionType.NOT_FOUND_USER));
     }
 
-    @Transactional
-    public Long saveMember(MemberSaveDTO saveDTO){
-        Optional<Member> find = memberRepository.findByEmail(saveDTO.getEmail());
-        if(find.isPresent()) throw new IllegalArgumentException("이미 존재하는 회원입니다.");
-        Member member = modelMapper.map(saveDTO, Member.class);
-        memberRepository.save(member);
-        log.debug("### MemberService -> saveMember : " + member);
-        return member.getMemberId();
-    }
-
-    @Transactional(readOnly = true)
-    public MemberRespDTO findById(Long id) throws IllegalArgumentException{
-        Optional<Member> finds = memberRepository.findById(id);
-
-        if(finds.isEmpty()) throw new IllegalArgumentException("아이디 [ " + id+" ] 에 해당하는 멤버가 없습니다.");
-
-        return modelMapper.map(
-                finds.get(),
-                MemberRespDTO.class
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public List<MemberRespDTO> findAll(){
-        return memberRepository.findAll().stream().map(o->modelMapper.map(o,MemberRespDTO.class)).collect(Collectors.toList());
-    }
-
 }

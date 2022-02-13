@@ -1,21 +1,15 @@
 package com.memo.backend.service.member;
 
-import com.memo.backend.domain.member.Member;
 import com.memo.backend.domain.member.MemberRepository;
 import com.memo.backend.dto.member.MemberRespDTO;
-import com.memo.backend.dto.member.MemberSaveDTO;
 import com.memo.backend.exceptionhandler.BizException;
 import com.memo.backend.exceptionhandler.MemberExceptionType;
 import com.memo.backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * MemberService 설명 : 멤버 등록 및 조회

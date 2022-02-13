@@ -1,10 +1,6 @@
 package com.memo.backend.restcontroller.member;
 
-import com.memo.backend.argumentresolver.Login;
-import com.memo.backend.commoncode.SessionConst;
-import com.memo.backend.domain.member.Member;
 import com.memo.backend.dto.member.MemberRespDTO;
-import com.memo.backend.dto.member.MemberSaveDTO;
 import com.memo.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

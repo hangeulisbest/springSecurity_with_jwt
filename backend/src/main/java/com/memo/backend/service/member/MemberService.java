@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
     public MemberRespDTO getMemberInfo(String email) {

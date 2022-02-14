@@ -45,11 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
-                // h2-console 을 위한 설정을 추가
-                .and()
+                /* iframe 관련 설정이고 X-frame-Options Click Jaking 공격을 기본적으로 막는걸로 설정되어있는데
+                 이를 풀기위한 설정을 하려면 아래의 설정을 추가하면 됨 */
+               /* .and()
                 .headers()
                 .frameOptions()
-                .sameOrigin()
+                .sameOrigin() */
 
                 // 시큐리티는 기본적으로 세션을 사용
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정

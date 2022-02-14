@@ -8,8 +8,11 @@ import com.memo.backend.dto.jwt.TokenDTO;
 import com.memo.backend.dto.jwt.TokenReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.dto.member.MemberRespDTO;
+import com.memo.backend.exceptionhandler.BizException;
+import com.memo.backend.exceptionhandler.MemberExceptionType;
 import com.memo.backend.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -29,10 +33,11 @@ public class AuthService {
     @Transactional
     public MemberRespDTO signup(MemberReqDTO memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new BizException(MemberExceptionType.DUPLICATE_USER);
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
+        log.debug("member = {}",member);
         return MemberRespDTO.of(memberRepository.save(member));
     }
 
@@ -41,18 +46,25 @@ public class AuthService {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
+        log.debug("login - > UsernamePasswordAuthenticationToken = {}",authenticationToken);
+
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        log.debug("login -> authentication = {}",authentication);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDTO tokenDto = tokenProvider.generateTokenDTO(authentication);
 
         // 4. RefreshToken 저장
+        log.debug("login - > authentication.getName = {}",authentication.getName());
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
+
+        log.debug("login -> refreshToken = {}",refreshToken);
 
         refreshTokenRepository.save(refreshToken);
 

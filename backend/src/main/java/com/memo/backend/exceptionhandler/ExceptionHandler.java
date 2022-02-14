@@ -3,6 +3,7 @@ package com.memo.backend.exceptionhandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +27,11 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(BizException.class)
     public ResponseEntity<ErrorResult> bizException(BizException e){
         return new ResponseEntity<>(ErrorResult.create(e.getBaseExceptionType()), e.getBaseExceptionType().getHttpStatus());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResult> authenticationException(AuthenticationException e) {
+        return new ResponseEntity<>(new ErrorResult("AUTH_ERROR",e.getMessage()),HttpStatus.BAD_REQUEST);
     }
 
     /**

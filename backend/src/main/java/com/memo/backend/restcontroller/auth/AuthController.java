@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * AuthController 설명 :
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/02/14
+**/
 @Slf4j
 @RestController
 @RequestMapping("/auth")

@@ -55,6 +55,7 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+        log.debug("generateTokenDTO -> authorities = {}",authorities);
 
         long now = (new Date()).getTime();
 
@@ -63,12 +64,16 @@ public class TokenProvider {
          */
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 엑세스토큰 만료 날짜 설정
 
+        log.debug("generateTokenDTO -> authentication.getName() = {}",authentication.getName());
+
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
                 .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
                 .compact();
+
+
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()

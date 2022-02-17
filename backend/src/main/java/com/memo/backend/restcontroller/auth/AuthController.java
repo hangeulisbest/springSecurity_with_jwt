@@ -2,6 +2,7 @@ package com.memo.backend.restcontroller.auth;
 
 import com.memo.backend.dto.jwt.TokenDTO;
 import com.memo.backend.dto.jwt.TokenReqDTO;
+import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.service.auth.AuthService;
@@ -32,8 +33,8 @@ public class AuthController {
         }
 
         @PostMapping("/login")
-        public TokenDTO login(@RequestBody MemberReqDTO memberRequestDto) {
-            return authService.login(memberRequestDto);
+        public TokenDTO login(@RequestBody LoginReqDTO loginReqDTO) {
+            return authService.login(loginReqDTO);
         }
 
         @PostMapping("/reissue")

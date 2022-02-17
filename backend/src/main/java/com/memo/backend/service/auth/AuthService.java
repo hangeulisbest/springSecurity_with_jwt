@@ -6,6 +6,7 @@ import com.memo.backend.domain.member.Member;
 import com.memo.backend.domain.member.MemberRepository;
 import com.memo.backend.dto.jwt.TokenDTO;
 import com.memo.backend.dto.jwt.TokenReqDTO;
+import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.exceptionhandler.BizException;
@@ -42,9 +43,9 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDTO login(MemberReqDTO memberRequestDto) {
+    public TokenDTO login(LoginReqDTO loginReqDTO) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
+        UsernamePasswordAuthenticationToken authenticationToken = loginReqDTO.toAuthentication();
 
         log.debug("login - > UsernamePasswordAuthenticationToken = {}",authenticationToken);
 

@@ -3,6 +3,7 @@ package com.memo.backend.dto.login;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.validation.constraints.NotBlank;
 /**
@@ -20,4 +21,8 @@ public class LoginReqDTO {
 
     @NotBlank
     private String password;
+
+    public UsernamePasswordAuthenticationToken toAuthentication() {
+        return new UsernamePasswordAuthenticationToken(email,password);
+    }
 }

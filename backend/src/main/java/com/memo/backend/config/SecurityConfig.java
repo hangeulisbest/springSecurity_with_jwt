@@ -62,7 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() // http servletRequest 를 사용하는 요청들에 대한 접근제한을 설정
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/admin/login").permitAll() // 관리자페이지 들어가기 위한 로그인 화면
+                .antMatchers("/v3/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll() // swagger
+
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용

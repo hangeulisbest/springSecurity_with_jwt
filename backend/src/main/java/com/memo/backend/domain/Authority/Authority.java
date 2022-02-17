@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "authority")
@@ -19,5 +16,6 @@ import javax.persistence.Table;
 public class Authority {
     @Id
     @Column(name = "authority_name",length = 50)
-    private String authorityName;
+    @Enumerated(EnumType.STRING)
+    private MemberAuth authorityName;
 }

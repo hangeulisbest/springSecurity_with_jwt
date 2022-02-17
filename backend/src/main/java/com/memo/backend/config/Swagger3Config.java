@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
@@ -23,6 +24,7 @@ import java.util.List;
  * 작성일 : 2022/01/04
 **/
 @Configuration
+@EnableOpenApi
 public class Swagger3Config {
 
     @Bean
@@ -64,7 +66,7 @@ public class Swagger3Config {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return List.of(new SecurityReference("JWT", authorizationScopes));
+        return List.of(new SecurityReference("Authorization", authorizationScopes));
     }
 
     /**
@@ -74,6 +76,6 @@ public class Swagger3Config {
      * 작성일 : 2022/01/25
     **/
     private ApiKey apiKey() {
-        return new ApiKey("JWT","Authorization","header");
+        return new ApiKey("Authorization","Authorization","header");
     }
 }

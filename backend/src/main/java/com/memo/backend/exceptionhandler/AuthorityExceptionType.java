@@ -4,14 +4,14 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum InternalServerExceptionType implements BaseExceptionType{
-    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR","서버 내부에 문제가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+public enum AuthorityExceptionType implements BaseExceptionType{
+    NOT_FOUND_AUTHORITY("NOT_FOUND_AUTHORITY","존재하지 않는 권한 입니다.", HttpStatus.BAD_REQUEST);
 
     private final String errorCode;
     private final String message;
     private final HttpStatus httpStatus;
 
-    InternalServerExceptionType(String errorCode, String message, HttpStatus httpStatus) {
+    AuthorityExceptionType(String errorCode, String message, HttpStatus httpStatus) {
         this.errorCode = errorCode;
         this.message = message;
         this.httpStatus = httpStatus;
@@ -19,16 +19,16 @@ public enum InternalServerExceptionType implements BaseExceptionType{
 
     @Override
     public String getErrorCode() {
-        return this.errorCode;
+        return errorCode;
     }
 
     @Override
     public String getMessage() {
-        return this.message;
+        return message;
     }
 
     @Override
     public HttpStatus getHttpStatus() {
-        return this.httpStatus;
+        return httpStatus;
     }
 }

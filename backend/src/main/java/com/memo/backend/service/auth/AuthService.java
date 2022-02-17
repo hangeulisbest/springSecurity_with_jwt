@@ -1,5 +1,8 @@
 package com.memo.backend.service.auth;
 
+import com.memo.backend.domain.Authority.Authority;
+import com.memo.backend.domain.Authority.AuthorityRepository;
+import com.memo.backend.domain.Authority.MemberAuth;
 import com.memo.backend.domain.jwt.RefreshToken;
 import com.memo.backend.domain.jwt.RefreshTokenRepository;
 import com.memo.backend.domain.member.Member;
@@ -9,6 +12,7 @@ import com.memo.backend.dto.jwt.TokenReqDTO;
 import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.dto.member.MemberRespDTO;
+import com.memo.backend.exceptionhandler.AuthorityExceptionType;
 import com.memo.backend.exceptionhandler.BizException;
 import com.memo.backend.exceptionhandler.MemberExceptionType;
 import com.memo.backend.jwt.TokenProvider;
@@ -21,12 +25,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -37,7 +44,15 @@ public class AuthService {
             throw new BizException(MemberExceptionType.DUPLICATE_USER);
         }
 
-        Member member = memberRequestDto.toMember(passwordEncoder);
+        // DB 에서 ROLE_USER를 찾아서 권한으로 추가한다.
+        Authority authority = authorityRepository
+                .findByAuthorityName(MemberAuth.ROLE_USER).orElseThrow(()->new BizException(AuthorityExceptionType.NOT_FOUND_AUTHORITY));
+
+        HashSet<Authority> set = new HashSet<>();
+        set.add(authority);
+
+
+        Member member = memberRequestDto.toMember(passwordEncoder,set);
         log.debug("member = {}",member);
         return MemberRespDTO.of(memberRepository.save(member));
     }

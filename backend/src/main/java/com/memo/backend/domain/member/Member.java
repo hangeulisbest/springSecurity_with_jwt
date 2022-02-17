@@ -43,11 +43,12 @@ public class Member {
     private Set<Authority> authorities = new HashSet<>();
 
     @Builder
-    public Member(String username, String email, String password, boolean activated) {
+    public Member(String username, String email, String password, boolean activated,Set<Authority> authorities) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.activated = activated;
+        this.authorities = authorities;
     }
 
     public void addAuthority(Authority authority) {
@@ -56,5 +57,9 @@ public class Member {
 
     public void removeAuthority(Authority authority) {
         this.getAuthorities().remove(authority);
+    }
+
+    public void activate(boolean flag) {
+        this.activated = flag;
     }
 }

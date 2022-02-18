@@ -33,15 +33,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         out.println("{\"error\": \"NO_AUTHORIZATION\", \"message\" : \"인증정보가 없습니다.\"");
 
     }
-
-
-    @ExceptionHandler(value = {AccessDeniedException.class})
-    public void commence(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException{
-        // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        out.println("{\"error\": \"NO_AUTHORIZATION\", \"message\" : \"수행할 권한이 없습니다.\"");
-    }
 }

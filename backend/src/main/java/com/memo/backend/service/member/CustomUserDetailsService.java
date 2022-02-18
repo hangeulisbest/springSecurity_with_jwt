@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,BizException {
-        log.debug("username = {}",username);
+        log.debug("CustomUserDetailsService -> username = {}",username);
         return memberRepository.findByEmail(username)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new BizException(MemberExceptionType.NOT_FOUND_USER));
@@ -35,7 +35,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
 
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthorities().toString());
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthoritiesToString());
+
+        log.debug("CustomUserDetailsService -> grantedAuthority = {}",grantedAuthority.getAuthority());
 
         return new User(
                 String.valueOf(member.getMemberId()),

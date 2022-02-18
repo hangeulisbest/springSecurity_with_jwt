@@ -18,4 +18,8 @@ public class Authority {
     @Column(name = "authority_name",length = 50)
     @Enumerated(EnumType.STRING)
     private MemberAuth authorityName;
+
+    public String getAuthorityName() {
+        return this.authorityName.toString();
+    }
 }

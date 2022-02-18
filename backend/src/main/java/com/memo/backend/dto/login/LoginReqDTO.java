@@ -23,6 +23,6 @@ public class LoginReqDTO {
     private String password;
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(email,password);
+        return new UsernamePasswordAuthenticationToken(email,password); //principal , credential
     }
 }

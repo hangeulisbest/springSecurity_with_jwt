@@ -6,7 +6,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -61,5 +63,11 @@ public class Member {
 
     public void activate(boolean flag) {
         this.activated = flag;
+    }
+
+    public String getAuthoritiesToString() {
+        return this.authorities.stream()
+                .map(o->o.getAuthorityName())
+                .collect(Collectors.joining(","));
     }
 }

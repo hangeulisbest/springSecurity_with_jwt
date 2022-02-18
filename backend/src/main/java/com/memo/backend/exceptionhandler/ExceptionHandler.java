@@ -3,6 +3,7 @@ package com.memo.backend.exceptionhandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -34,12 +35,10 @@ public class ExceptionHandler {
         return new ResponseEntity<>(new ErrorResult("AUTH_ERROR",e.getMessage()),HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * 개발자가 정의하지 않은 서버 내부에 문제가 발생할 경우! 터지면 안됨!
-     * @author jowonjun
-     * @version 1.0.0
-     * 작성일 : 2022/01/19
-    **/
+    @org.springframework.web.bind.annotation.ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResult> accessDeniedException(AccessDeniedException e) {
+        return new ResponseEntity<>(new ErrorResult("ACCESS_DENIED",e.getMessage()),HttpStatus.FORBIDDEN);
+    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResult> notResolvedException(Exception e){

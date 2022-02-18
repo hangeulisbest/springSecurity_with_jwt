@@ -4,6 +4,7 @@ import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -30,4 +31,13 @@ public class MemberController {
         return memberService.getMemberInfo(email);
     }
 
+    /**
+     * @PreAuthorize 는 ControllerAdvice에 의해 에러핸들링됨
+     * @return
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admintest")
+    public String adminTest() {
+        return "ADMIN OK!";
+    }
 }

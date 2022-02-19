@@ -1,6 +1,8 @@
 package com.memo.backend.jwt;
 
 import com.memo.backend.dto.jwt.TokenDTO;
+import com.memo.backend.exceptionhandler.AuthorityExceptionType;
+import com.memo.backend.exceptionhandler.BizException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.*;
@@ -94,9 +96,14 @@ public class TokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new BizException(AuthorityExceptionType.NOT_FOUND_AUTHORITY);
         }
 
+        log.debug("TokenProvider -> getAuthentication -> claims = {}",claims);
+        Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(",")).forEach(
+                o->log.debug("claim auth = {}",o)
+        );
+        log.debug("TokenProvider -> claim.getSubject() = {}",claims.getSubject());
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))

@@ -17,10 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @EnableWebSecurity // 기본적인 웹보안을 사용하겠다는 것
-// WebSecurityConfigurerAdapter 를 확장하면 보안 관련된 설정을 커스터마이징 할 수 있음
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true) // @PreAuthorize 사용을 위함
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurityConfigurerAdapter 를 확장하면 보안 관련된 설정을 커스터마이징 할 수 있음
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -64,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() // http servletRequest 를 사용하는 요청들에 대한 접근제한을 설정
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/v3/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll() // swagger
+                .antMatchers("/v3/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll() // swagger3
 
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 

@@ -14,6 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
 
+/**
+ * JwtFilter 설명 :
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/02/20
+**/
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {

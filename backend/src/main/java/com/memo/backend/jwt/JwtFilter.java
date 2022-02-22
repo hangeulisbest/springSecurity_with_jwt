@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 /**
- * JwtFilter 설명 :
+ * JwtFilter 설명 : 디스패처 포워딩이 되어도 단 한번만 실행되는 필터
  * @author jowonjun
  * @version 1.0.0
  * 작성일 : 2022/02/20

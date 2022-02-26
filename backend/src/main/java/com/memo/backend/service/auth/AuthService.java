@@ -15,6 +15,7 @@ import com.memo.backend.dto.member.MemberRespDTO;
 import com.memo.backend.exceptionhandler.AuthorityExceptionType;
 import com.memo.backend.exceptionhandler.BizException;
 import com.memo.backend.exceptionhandler.MemberExceptionType;
+import com.memo.backend.jwt.CustomEmailPasswordAuthToken;
 import com.memo.backend.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +62,7 @@ public class AuthService {
     @Transactional
     public TokenDTO login(LoginReqDTO loginReqDTO) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = loginReqDTO.toAuthentication();
+        CustomEmailPasswordAuthToken authenticationToken = loginReqDTO.toEmailPasswordToken();
 
         log.debug("login - > UsernamePasswordAuthenticationToken = {}",authenticationToken);
 

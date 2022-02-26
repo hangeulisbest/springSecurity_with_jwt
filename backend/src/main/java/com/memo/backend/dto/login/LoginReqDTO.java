@@ -1,5 +1,6 @@
 package com.memo.backend.dto.login;
 
+import com.memo.backend.jwt.CustomEmailPasswordAuthToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,9 @@ public class LoginReqDTO {
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
         return new UsernamePasswordAuthenticationToken(email,password); //principal , credential
+    }
+
+    public CustomEmailPasswordAuthToken toEmailPasswordToken() {
+        return new CustomEmailPasswordAuthToken(email,password);
     }
 }

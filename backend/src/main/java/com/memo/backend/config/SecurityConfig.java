@@ -6,6 +6,7 @@ import com.memo.backend.jwt.JwtSecurityConfig;
 import com.memo.backend.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -28,6 +29,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurit
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+    /*
+    * AuthenticationManager를 주입받기 위해서 빈으로 등록한다.
+    * */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
 
     // h2 database 테스트가 원활하도록 관련 API 들은 전부 무시
     @Override
@@ -70,5 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurit
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
+
     }
 }

@@ -18,6 +18,7 @@ import com.memo.backend.exceptionhandler.MemberExceptionType;
 import com.memo.backend.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,8 @@ import java.util.HashSet;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    //private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
@@ -64,9 +66,10 @@ public class AuthService {
         log.debug("login - > UsernamePasswordAuthenticationToken = {}",authenticationToken);
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
-        //  debugger
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication =  authenticationManager.authenticate(authenticationToken);
+        // authenticationManagerBuilder 를 통해 AuthenticationManager를 가져와도 되지만 빈으로 등록하면 바로가져올수 있음.
+        //Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         log.debug("login -> authentication = {}",authentication);
 

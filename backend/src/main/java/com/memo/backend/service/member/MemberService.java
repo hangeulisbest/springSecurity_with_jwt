@@ -36,7 +36,7 @@ public class MemberService {
      */
     @Transactional(readOnly = true)
     public MemberRespDTO getMyInfo() {
-        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
+        return memberRepository.findByEmail(SecurityUtil.getCurrentMemberEmail())
                 .map(MemberRespDTO::of)
                 .orElseThrow(()->new BizException(MemberExceptionType.NOT_FOUND_USER));
     }

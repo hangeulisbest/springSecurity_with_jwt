@@ -40,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.debug("CustomUserDetailsService -> grantedAuthority = {}",grantedAuthority.getAuthority());
 
         return new User(
-                String.valueOf(member.getMemberId()),
+                member.getEmail(),
                 member.getPassword(),
                 Collections.singleton(grantedAuthority)
         );

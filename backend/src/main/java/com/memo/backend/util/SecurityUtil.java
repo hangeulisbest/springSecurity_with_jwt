@@ -13,14 +13,14 @@ public class SecurityUtil {
     /**
      * @return SecurityContext에 저장되어 있는 유저 아이디를 반환함
      */
-    public static Long getCurrentMemberId() {
+    public static String getCurrentMemberEmail() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null || authentication.getName() == null) {
             throw new BizException(MemberExceptionType.NOT_FOUND_AUTHENTICATION);
         }
 
-        return Long.parseLong(authentication.getName());
+        return authentication.getName();
     }
 
 }

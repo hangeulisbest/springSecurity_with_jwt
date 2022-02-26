@@ -1,9 +1,6 @@
 package com.memo.backend.config;
 
-import com.memo.backend.jwt.JwtAccessDeniedHandler;
-import com.memo.backend.jwt.JwtAuthenticationEntryPoint;
-import com.memo.backend.jwt.JwtSecurityConfig;
-import com.memo.backend.jwt.TokenProvider;
+import com.memo.backend.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @EnableWebSecurity // 기본적인 웹보안을 사용하겠다는 것
@@ -81,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurit
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
     }
 }

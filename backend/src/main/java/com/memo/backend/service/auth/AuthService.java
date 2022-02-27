@@ -40,6 +40,8 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+
+
     @Transactional
     public MemberRespDTO signup(MemberReqDTO memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {

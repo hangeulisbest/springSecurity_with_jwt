@@ -25,9 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,BizException {
-        log.debug("CustomUserDetailsService -> username = {}",username);
-        return memberRepository.findByEmail(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException,BizException {
+        log.debug("CustomUserDetailsService -> email = {}",email);
+        return memberRepository.findByEmail(email)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new BizException(MemberExceptionType.NOT_FOUND_USER));
     }
@@ -41,7 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new User(
                 member.getEmail(),
-                member.getPassword(),
+                member.getEncodedPassword(),
                 Collections.singleton(grantedAuthority)
         );
     }

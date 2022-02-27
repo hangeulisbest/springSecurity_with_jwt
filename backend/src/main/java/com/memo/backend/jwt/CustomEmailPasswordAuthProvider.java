@@ -1,23 +1,51 @@
 package com.memo.backend.jwt;
 
+import com.memo.backend.exceptionhandler.BizException;
+import com.memo.backend.exceptionhandler.MemberExceptionType;
 import com.memo.backend.service.member.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
 
+    private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
-    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+
+//    public CustomEmailPasswordAuthProvider(CustomUserDetailsService customUserDetailsService) {
+//        this.passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        this.customUserDetailsService = customUserDetailsService;
+//    }
+
+    protected void additionalAuthenticationChecks(UserDetails userDetails,
+                                                  CustomEmailPasswordAuthToken authentication) throws AuthenticationException {
+
+       log.debug("additionalAuthenticationChecks authentication = {}",authentication);
+
+        if (authentication.getCredentials() == null) {
+            log.debug("additionalAuthenticationChecks is null !");
+            throw new BizException(MemberExceptionType.NOT_FOUND_PASSWORD);
+        }
+        String presentedPassword = authentication.getCredentials().toString();
+        log.debug("authentication.presentedPassword = {}",presentedPassword);
+
+        if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+            throw new BizException(MemberExceptionType.WRONG_PASSWORD);
+        }
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -32,6 +60,7 @@ public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
         CustomEmailPasswordAuthToken result = new CustomEmailPasswordAuthToken(principalToReturn
                 ,authentication.getCredentials()
                 ,this.authoritiesMapper.mapAuthorities(user.getAuthorities()));
+        additionalAuthenticationChecks(user,result);
         result.setDetails(authentication.getDetails());
         return result;
     }

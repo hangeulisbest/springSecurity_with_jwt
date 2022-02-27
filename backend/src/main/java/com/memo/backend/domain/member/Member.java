@@ -2,7 +2,10 @@ package com.memo.backend.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.memo.backend.domain.Authority.Authority;
+import com.memo.backend.domain.Authority.MemberAuth;
+import com.memo.backend.dto.member.MemberUpdateDTO;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -65,9 +68,25 @@ public class Member {
         this.activated = flag;
     }
 
+    public String getEncodedPassword() {
+        return "{noop}" + this.password;
+    }
+
     public String getAuthoritiesToString() {
         return this.authorities.stream()
                 .map(o->o.getAuthorityName())
                 .collect(Collectors.joining(","));
+    }
+
+    public void updateMember(MemberUpdateDTO dto, PasswordEncoder passwordEncoder) {
+        if(dto.getPassword() != null) this.password = passwordEncoder.encode(dto.getPassword());
+        if(dto.getUsername() != null) this.username = dto.getUsername();
+        if(dto.getAuthorities().size() > 0) {
+            this.authorities = dto.getAuthorities().stream()
+                    .filter(MemberAuth::containsKey)
+                    .map(MemberAuth::get)
+                    .map(Authority::new)
+                    .collect(Collectors.toSet());
+        }
     }
 }

@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException,BizException {
+    public UserDetails loadUserByUsername(String email) throws BizException {
         log.debug("CustomUserDetailsService -> email = {}",email);
         return memberRepository.findByEmail(email)
                 .map(this::createUserDetails)

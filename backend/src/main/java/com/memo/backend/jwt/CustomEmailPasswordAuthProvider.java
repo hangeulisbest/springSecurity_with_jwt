@@ -65,7 +65,7 @@ public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
         return result;
     }
 
-    protected final UserDetails retrieveUser(String username ) throws AuthenticationException {
+    protected final UserDetails retrieveUser(String username ) throws BizException {
         try {
             UserDetails loadedUser = customUserDetailsService.loadUserByUsername(username);
             if (loadedUser == null) {
@@ -74,11 +74,13 @@ public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
             }
             return loadedUser;
         }
-        catch (UsernameNotFoundException ex) {
+        catch (BizException ex) {
+            log.debug("error in retrieveUser = {}", ex.getMessage());
             throw ex;
         }
         catch (Exception ex) {
-            throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
+            throw new InternalAuthenticationServiceException(
+                    "내부 인증 로직중 알수 없는 오류가 발생하였습니다.");
         }
     }
 

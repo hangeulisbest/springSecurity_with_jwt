@@ -5,9 +5,10 @@ import com.memo.backend.domain.Authority.AuthorityRepository;
 import com.memo.backend.domain.Authority.MemberAuth;
 import com.memo.backend.domain.member.Member;
 import com.memo.backend.domain.member.MemberRepository;
+import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.exceptionhandler.BizException;
-import org.junit.jupiter.api.BeforeAll;
+import com.memo.backend.exceptionhandler.MemberExceptionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,67 @@ class AuthServiceTest {
             authService.signup(dto);
         });
 
+        // 이미 존재하는 사용자 입니다.
         assertEquals(bizException.getBaseExceptionType().getErrorCode(),"DUPLICATE_USER");
     }
+
+    @DisplayName("이메일이 존재하지 않아 로그인에 실패한다.")
+    @Test
+    @Transactional
+    public void loginFailBecauseNotFoundEmail() {
+        //given
+        LoginReqDTO dto = new LoginReqDTO();
+        dto.setEmail("abc@abc.com");
+
+        //when
+        BizException bizException = assertThrows(BizException.class, () -> {
+            authService.login(dto);
+        });
+
+        //then
+        // 사용자를 찾을 수 없습니다.
+        assertEquals(bizException.getBaseExceptionType().getErrorCode(), MemberExceptionType.NOT_FOUND_USER.getErrorCode());
+    }
+
+    @DisplayName("비밀번호를 입력하지 않아 로그인 실패")
+    @Test
+    @Transactional
+    public void loginFailBecauseEmptyPassword() {
+        // given
+        LoginReqDTO dto = new LoginReqDTO();
+        dto.setEmail("normalUser@normalUser.com");
+
+        //when
+        BizException bizException = assertThrows(BizException.class, () -> {
+            authService.login(dto);
+        });
+
+        //then
+        // 비밀번호를 입력해주세요.
+        assertEquals(bizException.getBaseExceptionType().getErrorCode()
+                ,MemberExceptionType.NOT_FOUND_PASSWORD.getErrorCode());
+
+    }
+
+    @DisplayName("비밀번호가 틀려서 로그인 실패")
+    @Test
+    @Transactional
+    public void loginFailBecauseWrongPassword() {
+        // given
+        LoginReqDTO dto = new LoginReqDTO();
+        dto.setEmail("normalUser@normalUser.com");
+        dto.setPassword("12345"); // right password : 1234
+
+        //when
+        BizException bizException = assertThrows(BizException.class, () -> {
+            authService.login(dto);
+        });
+
+        //then
+        // 비밀번호를 잘못 입력하였습니다.
+        assertEquals(bizException.getBaseExceptionType().getErrorCode()
+                ,MemberExceptionType.WRONG_PASSWORD.getErrorCode());
+
+    }
+
 }

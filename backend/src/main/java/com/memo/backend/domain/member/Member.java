@@ -68,10 +68,6 @@ public class Member {
         this.activated = flag;
     }
 
-    public String getEncodedPassword() {
-        return "{noop}" + this.password;
-    }
-
     public String getAuthoritiesToString() {
         return this.authorities.stream()
                 .map(o->o.getAuthorityName())

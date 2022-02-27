@@ -41,7 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new User(
                 member.getEmail(),
-                member.getEncodedPassword(),
+                member.getPassword(),
                 Collections.singleton(grantedAuthority)
         );
     }

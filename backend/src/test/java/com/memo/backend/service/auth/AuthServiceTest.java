@@ -5,10 +5,12 @@ import com.memo.backend.domain.Authority.AuthorityRepository;
 import com.memo.backend.domain.Authority.MemberAuth;
 import com.memo.backend.domain.member.Member;
 import com.memo.backend.domain.member.MemberRepository;
+import com.memo.backend.dto.jwt.TokenDTO;
 import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.exceptionhandler.BizException;
 import com.memo.backend.exceptionhandler.MemberExceptionType;
+import com.memo.backend.jwt.TokenProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -145,6 +147,19 @@ class AuthServiceTest {
         assertEquals(bizException.getBaseExceptionType().getErrorCode()
                 ,MemberExceptionType.WRONG_PASSWORD.getErrorCode());
 
+    }
+
+    @DisplayName("로그인에 성공한다")
+    @Test
+    @Transactional
+    public void loginSuccess() {
+        // given
+        LoginReqDTO dto = new LoginReqDTO();
+        dto.setEmail("normalUser@normalUser.com");
+        dto.setPassword("1234"); // right password : 1234
+
+        TokenDTO login = authService.login(dto);
+        assertEquals(login.getGrantType(),"Bearer");
     }
 
 }

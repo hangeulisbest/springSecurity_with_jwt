@@ -7,6 +7,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,10 +32,11 @@ import java.util.stream.Collectors;
  * 작성일 : 2022/02/09
 **/
 @Slf4j
+@Getter
 @Component
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "bearer";
+    private static final String BEARER_TYPE = "Bearer";
     private final long ACCESS_TOKEN_EXPIRE_TIME;            // 30분
     private final long REFRESH_TOKEN_EXPIRE_TIME;  // 7일
 

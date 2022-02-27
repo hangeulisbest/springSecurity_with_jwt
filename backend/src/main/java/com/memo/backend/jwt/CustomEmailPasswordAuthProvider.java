@@ -48,11 +48,11 @@ public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws BizException {
         UserDetails user = null;
         try {
             user = retrieveUser(authentication.getName());
-        }catch (UsernameNotFoundException ex) {
+        }catch (BizException ex) {
             throw ex;
         }
 

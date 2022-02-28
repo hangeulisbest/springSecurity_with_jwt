@@ -1,6 +1,7 @@
 package com.memo.backend.restcontroller.member;
 
 import com.memo.backend.dto.member.MemberRespDTO;
+import com.memo.backend.dto.member.MemberUpdateDTO;
 import com.memo.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/me")
+    @GetMapping("")
     public MemberRespDTO getMyInfo() {
         return memberService.getMyInfo();
     }
@@ -29,6 +30,11 @@ public class MemberController {
     @GetMapping("/{email}")
     public MemberRespDTO getMemberInfo(@PathVariable String email) {
         return memberService.getMemberInfo(email);
+    }
+
+    @PutMapping("")
+    public void updateMember(@RequestBody MemberUpdateDTO dto) {
+        memberService.updateMemberInfo(dto);
     }
 
     /**

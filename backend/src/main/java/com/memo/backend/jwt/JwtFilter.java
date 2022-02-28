@@ -1,5 +1,7 @@
 package com.memo.backend.jwt;
 
+import com.memo.backend.exceptionhandler.BizException;
+import com.memo.backend.exceptionhandler.JwtExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 
 /**
@@ -34,26 +37,58 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
-        log.debug("headerName is authorization = {}",request.getHeader("authorization"));
+        if(request.getServletPath().startsWith("/auth")) {
+            filterChain.doFilter(request,response);
+        }else {
+            String token = resolveToken(request);
 
+            log.debug("token  = {}",token);
+            if(StringUtils.hasText(token)) {
+                int flag = tokenProvider.validateToken(token);
 
-        // 1. Request Header 에서 토큰을 꺼냄
-        String jwt = resolveToken(request);
-
-        log.debug("JwtFilter -> jwt = {}",jwt);
-        // 2. validateToken 으로 토큰 유효성 검사
-        // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("flag = {}",flag);
+                // 토큰 유효함
+                if(flag == 1) {
+                    this.setAuthentication(token);
+                }else if(flag == 2) { // 토큰 만료
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
+                    log.debug("doFilterInternal Exception CALL!");
+                    out.println("{\"error\": \"ACCESS_TOKEN_EXPIRED\", \"message\" : \"엑세스토큰이 만료되었습니다.\"}");
+                }else { //잘못된 토큰
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
+                    log.debug("doFilterInternal Exception CALL!");
+                    out.println("{\"error\": \"BAD_TOKEN\", \"message\" : \"잘못된 토큰 값입니다.\"}");
+                }
+            }
+            else {
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter out = response.getWriter();
+                out.println("{\"error\": \"EMPTY_TOKEN\", \"message\" : \"토큰 값이 비어있습니다.\"}");
+            }
         }
+    }
 
-        filterChain.doFilter(request, response);
+    /**
+     *
+     * @param token
+     * 토큰이 유효한 경우 SecurityContext에 저장
+     */
+    private void setAuthentication(String token) {
+        Authentication authentication = tokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     // Request Header 에서 토큰 정보를 꺼내오기
     private String resolveToken(HttpServletRequest request) {
-        // breaer : 123123123123123 -> return 123123123123123123
+        // bearer : 123123123123123 -> return 123123123123123123
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);

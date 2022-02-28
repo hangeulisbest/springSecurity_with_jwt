@@ -80,7 +80,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurit
 
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
-                // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
+                // JwtFilter 를 등록한다.
+                // UsernamePasswordAuthenticationFilter 앞에 등록하는 이유는 딱히 없지만
+                // SecurityContext를 사용하기 때문에 앞단의 필터에서 SecurityContext가 설정되고 난뒤 필터를 둔다.
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 

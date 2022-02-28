@@ -3,9 +3,12 @@ package com.memo.backend.service.auth;
 import com.memo.backend.domain.Authority.Authority;
 import com.memo.backend.domain.Authority.AuthorityRepository;
 import com.memo.backend.domain.Authority.MemberAuth;
+import com.memo.backend.domain.jwt.RefreshToken;
+import com.memo.backend.domain.jwt.RefreshTokenRepository;
 import com.memo.backend.domain.member.Member;
 import com.memo.backend.domain.member.MemberRepository;
 import com.memo.backend.dto.jwt.TokenDTO;
+import com.memo.backend.dto.jwt.TokenReqDTO;
 import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.dto.member.MemberReqDTO;
 import com.memo.backend.exceptionhandler.BizException;
@@ -34,6 +37,9 @@ class AuthServiceTest {
 
     @Autowired
     AuthorityRepository authorityRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     EntityManager em;

@@ -29,6 +29,7 @@ public class Member {
     @Column(name = "username",length = 50,nullable = false)
     private String username;
 
+    // Email 을 토큰의 ID로 관리하기 때문에 unique = True
     @Column(name = "email",unique = true,nullable = false)
     private String email;
 
@@ -70,7 +71,7 @@ public class Member {
 
     public String getAuthoritiesToString() {
         return this.authorities.stream()
-                .map(o->o.getAuthorityName())
+                .map(Authority::getAuthorityName)
                 .collect(Collectors.joining(","));
     }
 

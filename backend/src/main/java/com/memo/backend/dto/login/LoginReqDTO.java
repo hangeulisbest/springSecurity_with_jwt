@@ -23,11 +23,4 @@ public class LoginReqDTO {
     @NotBlank
     private String password;
 
-    public UsernamePasswordAuthenticationToken toAuthentication() {
-        return new UsernamePasswordAuthenticationToken(email,password); //principal , credential
-    }
-
-    public CustomEmailPasswordAuthToken toEmailPasswordToken() {
-        return new CustomEmailPasswordAuthToken(email,password);
-    }
 }

@@ -1,28 +1,42 @@
 package com.memo.backend.jwt;
 
+import com.memo.backend.domain.Authority.Authority;
+import com.memo.backend.domain.Authority.MemberAuth;
+import com.memo.backend.domain.member.Member;
+import com.memo.backend.domain.member.MemberRepository;
 import com.memo.backend.dto.jwt.TokenDTO;
+import com.memo.backend.dto.login.LoginReqDTO;
 import com.memo.backend.exceptionhandler.AuthorityExceptionType;
 import com.memo.backend.exceptionhandler.BizException;
+import com.memo.backend.exceptionhandler.JwtExceptionType;
+import com.memo.backend.exceptionhandler.MemberExceptionType;
+import com.memo.backend.service.member.CustomUserDetailsService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ognl.Token;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +49,10 @@ import java.util.stream.Collectors;
 @Getter
 @Component
 public class TokenProvider {
+
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
+
     private final long ACCESS_TOKEN_EXPIRE_TIME;            // 30분
     private final long REFRESH_TOKEN_EXPIRE_TIME;  // 7일
 
@@ -52,86 +68,111 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDTO generateTokenDTO(Authentication authentication) {
-        // 모든 권한들 가져오기
-        // 요청 한개 단위에 따라 그 요청의 인증정보가 다 담겨있음.
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    protected String createToken(String email, Set<Authority> auth,long tokenValid) {
+        // ex) sub : abc@abc.com
+        Claims claims = Jwts.claims().setSubject(email);
 
-        log.debug("generateTokenDTO -> authorities = {}",authorities);
+        // ex)  auth : ROLE_USER,ROLE_ADMIN
+        claims.put(AUTHORITIES_KEY,
+                auth.stream()
+                        .map(Authority::getAuthorityName)
+                        .collect(Collectors.joining(","))
+        );
 
-        long now = (new Date()).getTime();
+        // 현재시간
+        Date now = new Date();
 
-        /**
-         * AccessToken 생성
-         */
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 엑세스토큰 만료 날짜 설정
-
-        log.debug("generateTokenDTO -> authentication.getName() = {}",authentication.getName());
-
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "name"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+        return Jwts.builder()
+                .setClaims(claims) // 토큰 발행 유저 정보
+                .setIssuedAt(now) // 토큰 발행 시간
+                .setExpiration(new Date(now.getTime() + tokenValid)) // 토큰 만료시간
+                .signWith(key,SignatureAlgorithm.HS512) // 키와 알고리즘 설정
                 .compact();
+    }
 
+    /**
+     *
+     * @param email
+     * @param auth
+     * @return 엑세스 토큰 생성
+     */
+    public String createAccessToken(String email,Set<Authority> auth) {
+        return this.createToken(email,auth,ACCESS_TOKEN_EXPIRE_TIME);
+    }
 
+    /**
+     *
+     * @param email
+     * @param auth
+     * @return 리프레시 토큰 생성
+     */
+    public String createRefreshToken(String email,Set<Authority> auth) {
+        return this.createToken(email,auth,REFRESH_TOKEN_EXPIRE_TIME);
+    }
 
-        // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+    /**
+     *
+     * @param token
+     * @return 토큰 값을 파싱하여 클레임에 담긴 이메일 값을 가져온다.
+     */
+    public String getMemberEmailByToken(String token) {
+        // 토큰의 claim 의 sub 키에 이메일 값이 들어있다.
+        return this.parseClaims(token).getSubject();
+    }
 
+    /**
+     *
+     * @param accessToken
+     * @param refreshToken
+     * @return TOEKN DTO를 생성한다.
+     */
+    public TokenDTO createTokenDTO(String accessToken,String refreshToken) {
         return TokenDTO.builder()
-                .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
+                .grantType(BEARER_TYPE)
                 .build();
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    public Authentication getAuthentication(String accessToken) throws BizException{
+
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new BizException(AuthorityExceptionType.NOT_FOUND_AUTHORITY);
+        if (claims.get(AUTHORITIES_KEY) == null || !StringUtils.hasText(claims.get(AUTHORITIES_KEY).toString())) {
+            throw new BizException(AuthorityExceptionType.NOT_FOUND_AUTHORITY); // 유저에게 아무런 권한이 없습니다.
         }
 
-        log.debug("TokenProvider -> getAuthentication -> claims = {}",claims);
-        Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(",")).forEach(
-                o->log.debug("claim auth = {}",o)
-        );
-        log.debug("TokenProvider -> claim.getSubject() = {}",claims.getSubject());
+        log.debug("claims.getAuth = {}",claims.get(AUTHORITIES_KEY));
+        log.debug("claims.getEmail = {}",claims.getSubject());
+
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
+        authorities.stream().forEach(o->{
+            log.debug("getAuthentication -> authorities = {}",o.getAuthority());
+        });
+
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new CustomEmailPasswordAuthToken(principal, "", authorities);
     }
 
-    public boolean validateToken(String token) {
+    public int validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            return 1;
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            return 2;
+        } catch (Exception e) {
+            log.info("잘못된 토큰입니다.");
+            return -1;
         }
-        return false;
     }
 
 

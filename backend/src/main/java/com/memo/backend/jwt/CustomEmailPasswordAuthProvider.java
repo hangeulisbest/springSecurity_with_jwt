@@ -31,7 +31,7 @@ public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
 //    }
 
     protected void additionalAuthenticationChecks(UserDetails userDetails,
-                                                  CustomEmailPasswordAuthToken authentication) throws AuthenticationException {
+                                                  CustomEmailPasswordAuthToken authentication) throws BizException {
 
        log.debug("additionalAuthenticationChecks authentication = {}",authentication);
 

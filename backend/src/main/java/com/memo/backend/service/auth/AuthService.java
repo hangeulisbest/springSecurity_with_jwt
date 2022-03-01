@@ -33,7 +33,6 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    //private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
     private final AuthorityRepository authorityRepository;

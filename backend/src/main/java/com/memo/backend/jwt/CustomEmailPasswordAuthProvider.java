@@ -7,12 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +22,6 @@ public class CustomEmailPasswordAuthProvider implements AuthenticationProvider {
     private final CustomUserDetailsService customUserDetailsService;
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-//    public CustomEmailPasswordAuthProvider(CustomUserDetailsService customUserDetailsService) {
-//        this.passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        this.customUserDetailsService = customUserDetailsService;
-//    }
 
     protected void additionalAuthenticationChecks(UserDetails userDetails,
                                                   CustomEmailPasswordAuthToken authentication) throws BizException {

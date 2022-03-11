@@ -16,6 +16,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * SecurityConfig 설명 : 코드 정리 필요!
+ * @author jowonjun
+ * @version 1.0.0
+ * 작성일 : 2022/03/11
+**/
 
 @EnableWebSecurity // 기본적인 웹보안을 사용하겠다는 것
 @RequiredArgsConstructor
